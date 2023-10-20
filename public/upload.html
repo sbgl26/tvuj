@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload d'Images</title>
+</head>
+<body>
+    <form id="uploadForm">
+        <input type="file" id="fileInput" accept="image/*" multiple>
+        <button type="submit">Uploader</button>
+    </form>
+    <a href="diaporama.html">Voir le diaporama</a>
+    <script src="upload.js"></script>
+</body>
+<script>
+    document.getElementById("uploadForm").addEventListener("submit", async function(e) {
+        e.preventDefault();
+
+        const fileInput = document.getElementById("fileInput");
+        const formData = new FormData();
+        Array.from(fileInput.files).forEach(file => {
+            formData.append("image", file);
+        });
+
+        try {
+            const response = await fetch("http://localhost:3000/upload", {
+                method: "POST",
+                body: formData
+            });
+            const imageUrl = await response.text();
+            console.log("Image uploaded:", imageUrl);
+        } catch (error) {
+            console.error("Error uploading image:", error);
+        }
+    });
+</script>
+</html>

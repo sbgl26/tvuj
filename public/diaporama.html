@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diaporama</title>
+    <style>
+        #diaporama img {
+            max-width: 100%;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="diaporama">
+        <!-- Les images seront chargées ici depuis le site d'upload -->
+    </div>
+    <script src="diaporama.js"></script>
+</body>
+<script>
+    let index = 0;
+
+    async function fetchImages() {
+        try {
+            const response = await fetch("http://localhost:3000/images");
+            const imageUrls = await response.json();
+            const diaporamaDiv = document.getElementById("diaporama");
+            imageUrls.forEach(url => {
+                const img = document.createElement("img");
+                img.src = url;
+                diaporamaDiv.appendChild(img);
+            });
+        } catch (error) {
+            console.error("Error fetching images:", error);
+        }
+    }
+
+    function afficherImage() {
+        const images = document.querySelectorAll("#diaporama img");
+        if (images.length === 0) return;
+
+        images[index].style.display = "none";
+        index = (index + 1) % images.length;
+        images[index].style.display = "block";
+    }
+
+    fetchImages();
+    setInterval(afficherImage, 3000);
+</script>
+</html>
